@@ -9,53 +9,17 @@
   h1 { text-align:center; font-size:18px; margin:10px 0; }
   #searchBox { width:65%; padding:4px; font-size:14px; }
   #searchBtn { padding:4px; font-size:14px; background:#cc0000; color:#fff; border:none; }
-  .video { background:#333; border:1px solid #555; padding:5px; margin:5px 0; text-align:center; }
-  .video img { max-width:100%; height:auto; border:1px solid #666; cursor:pointer; }
-  .title { font-size:12px; margin-top:3px; }
-  #player { display:no
-<!DOCTYPE html>
-<html lang="ar">
-<head>
-<meta charset="UTF-8">
-<title>YouTube Search</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-  body { background:#222; color:#fff; font-family:Arial; margin:0; padding:5px; }
-  h1 { text-align:center; font-size:18px; margin:10px 0; }
-  #searchBox { width:65%; padding:4px; font-size:14px; }
-  #searchBtn { padding:4px; font-size:14px; background:#cc0000; color:#fff; border:none; }
-  .video { background:#333; border:1px solid #555; padding:5px; margin:5px 0; text-align:center; }
-  .video img { max-width:100%; height:auto; border:1px solid #666; cursor:pointer; }
+  .video { background:#333; border:1px solid #555; padding:5px; margin:5px auto; text-align:center; width:160px; }
+  .video img { width:160px; height:160px; border:1px solid #666; cursor:pointer; }
   .title { font-size:12px; margin-top:3px; }
   #player { display:none; text-align:center; margin-top:5px; }
-  .video-container {
-    position: relative;
-    width: 100%;
-    max-width: 320px;
-    margin: 0 auto;
-  }
-  .video-container::before {
-    content: "";
-    display: block;
-    padding-bottom: 100%; /* مربع (1:1) */
-  }
-  .video-container iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-  }
-  .back-btn, .fullscreen-btn {
-    display:inline-block; background:#555; color:#fff; padding:4px; margin:5px; text-align:center;
-    width:80px; text-decoration:none; font-size:12px;
-  }
+  iframe { width:160px; height:160px; border:none; }
+  .back-btn { display:inline-block; background:#555; color:#fff; padding:4px; margin:5px; text-decoration:none; font-size:12px; }
 </style>
 </head>
 <body>
 
-<h1>Youtube For Android 4</h1>
+<h1>Youtube For Old Android</h1>
 
 <div style="text-align:center;">
   <input type="text" id="searchBox" placeholder="ابحث عن فيديو">
@@ -64,9 +28,8 @@
 
 <div id="player">
   <a href="#" class="back-btn" onclick="hidePlayer();return false;">رجوع</a>
-  <a href="#" class="fullscreen-btn" onclick="makeFullScreen();return false;">تكبير</a>
-  <div class="video-container">
-    <iframe id="videoFrame" src="" allowfullscreen></iframe>
+  <div>
+    <iframe id="videoFrame" src=""></iframe>
   </div>
 </div>
 
@@ -74,7 +37,7 @@
 
 <script>
 var API_KEY = "AIzaSyClKkceEQXMxeWsw990Jx_5ZJWGKiuq87I";
-var MAX_RESULTS = 10;
+var MAX_RESULTS = 15;
 
 function loadVideos(query) {
   var url = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=" +
@@ -90,10 +53,9 @@ function loadVideos(query) {
 
       if (data.items) {
         for (var i = 0; i < data.items.length; i++) {
-          var item = data.items[i];
-          var videoId = item.id.videoId;
-          var title = item.snippet.title;
-          var thumb = item.snippet.thumbnails.default.url;
+          var videoId = data.items[i].id.videoId;
+          var title = data.items[i].snippet.title;
+          var thumb = data.items[i].snippet.thumbnails.default.url;
 
           var div = document.createElement("div");
           div.className = "video";
@@ -115,28 +77,12 @@ function playVideo(id) {
   document.getElementById("videoFrame").src = "https://www.youtube.com/embed/" + id + "?autoplay=1";
   document.getElementById("player").style.display = "block";
   document.getElementById("videos").style.display = "none";
-  window.scrollTo(0, 0);
 }
 
 function hidePlayer() {
   document.getElementById("player").style.display = "none";
   document.getElementById("videos").style.display = "block";
   document.getElementById("videoFrame").src = "";
-}
-
-function makeFullScreen() {
-  var iframe = document.getElementById("videoFrame");
-  if (iframe.requestFullscreen) {
-    iframe.requestFullscreen();
-  } else if (iframe.mozRequestFullScreen) {
-    iframe.mozRequestFullScreen();
-  } else if (iframe.webkitRequestFullscreen) {
-    iframe.webkitRequestFullscreen();
-  } else if (iframe.msRequestFullscreen) {
-    iframe.msRequestFullscreen();
-  } else {
-    alert("متصفحك لا يدعم وضع ملء الشاشة.");
-  }
 }
 
 document.getElementById("searchBtn").onclick = function() {
